@@ -1,0 +1,51 @@
+-- Dados de acesso ao BD
+
+hostname=127.0.0.1,
+port=3306
+user="root",
+password="Minas@0202",
+database="Showdomilhao"
+
+-- Script de Criação do Banco
+
+create database showdomilhao
+default character set utf8;
+use showdomilhao;
+
+-- drop database showdomilhao;
+-- Script de Criação das Tabelas
+
+-- drop database showdomilhao;
+-- SELECT * FROM jogador;
+-- SELECT * FROM partida;
+-- SELECT * FROM pergunta;
+-- SELECT * FROM alternativa;
+
+ create table pergunta(
+idpergunta INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+enunciado VARCHAR(255) not null,
+ PRIMARY KEY (idpergunta)); 
+ 
+create table jogador(
+idjogador INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+nome VARCHAR(30) NOT NULL,
+email VARCHAR(30) NOT NULL,
+senha VARCHAR(12) NOT NULL,
+PRIMARY KEY (idjogador));
+
+create table alternativa(
+idalternativa INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+idpergunta INTEGER NOT NULL,
+conteudo VARCHAR(255) NOT NULL,
+alternativacorreta BOOL NOT NULL,
+ PRIMARY KEY (idalternativa),
+ FOREIGN KEY (idpergunta)
+ REFERENCES pergunta (idpergunta));
+
+create table partida(
+idpartida INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+PRIMARY KEY (idpartida),
+idjogador INTEGER NOT NULL,
+pontuacaoparcial INTEGER,
+FOREIGN KEY (idjogador)
+REFERENCES jogador(idjogador));

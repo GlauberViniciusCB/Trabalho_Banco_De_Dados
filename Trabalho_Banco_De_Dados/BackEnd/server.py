@@ -4,6 +4,7 @@ import sqlalchemy
 import pandas as pd
 import csv
 from sqlalchemy import create_engine
+import chardet
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -27,23 +28,47 @@ conn = pymysql.connect(
 # Criar um cursor para executar as queries
 cursor = conn.cursor()
 
-# Nome do arquivo CSV
-pergunta_csv = 'C:/Users/AmandaeLuiz04/Downloads/Trabalho_Banco_De_Dados/Trabalho_Banco_De_Dados/BackEnd/pergunta.csv'
-alternativa_csv = 'C:/Users/AmandaeLuiz04/Downloads/Trabalho_Banco_De_Dados/Trabalho_Banco_De_Dados/BackEnd/alternativa.csv'
+# Nome do arquivo CSV e tabela
+arquivo_csv = 'C:/Users/AmandaeLuiz04/Downloads/Trabalho_Banco_De_Dados/Trabalho_Banco_De_Dados/BackEnd/alternativa.csv'
+tabela = 'alternativa'  # Verifique se o nome da tabela está correto
 
 # Abrir o arquivo CSV
-with open(pergunta_csv, 'r', encoding='utf-8') as csvfile:
-    # Criar um leitor CSV
+with open(arquivo_csv, 'r', encoding='utf-8') as csvfile:
     csvreader = csv.reader(csvfile)
-    # Ignorar a primeira linha se ela contiver os cabeçalhos
-    next(csvreader, None)
+    next(csvreader)  # Ignorar o cabeçalho
 
-    # Inserir os dados na tabela
     for row in csvreader:
-        # Adaptar a query SQL de acordo com a estrutura da sua tabela
-        sql = "INSERT INTO pergunta (enunciado) VALUES (%s)"
+        idpergunta, conteudo, alternativacorreta = row
+        sql = f"INSERT INTO {tabela} (idpergunta, conteudo, alternativacorreta) VALUES (%s, %s, %s)"
+        cursor.execute(sql, (idpergunta, conteudo, alternativacorreta))
+
+# Confirmar as alterações
+conn.commit()
+
+# Fechar a conexão
+conn.close()
+
+"""# Criar um cursor para executar as queries
+cursor = conn.cursor()
+
+# Nome do arquivo CSV e tabela
+arquivo_csv = 'C:/Users/AmandaeLuiz04/Downloads/Trabalho_Banco_De_Dados/Trabalho_Banco_De_Dados/BackEnd/pergunta.csv'
+tabela = 'pergunta'  # Verifique se o nome da tabela está correto
+
+# Abrir o arquivo CSV
+with open(arquivo_csv, 'r', encoding='utf-8') as csvfile:
+    csvreader = csv.reader(csvfile)
+    next(csvreader)  # Ignorar o cabeçalho
+
+    for row in csvreader:
+        sql = f"INSERT INTO {tabela} (enunciado) VALUES (%s)"
         cursor.execute(sql, row)
 
+# Confirmar as alterações
+conn.commit()
+
+# Fechar a conexão
+conn.close()
 # Abrir o arquivo CSV
 with open(alternativa_csv, 'r', encoding='utf-8') as csvfile:
     # Criar um leitor CSV
@@ -65,7 +90,7 @@ with open(alternativa_csv, 'r', encoding='utf-8') as csvfile:
 conn.commit()
 
 # Fechar a conexão com o banco de dados
-conn.close()
+conn.close()"""
 
 
 """"engine = create_engine('mysql://root:Minas@0202@host/showdomilhao')
@@ -120,8 +145,3 @@ def salvar():
   return "Cadastro bem sucedido!"
 
 app.run()"""
-
-
-
-
-
