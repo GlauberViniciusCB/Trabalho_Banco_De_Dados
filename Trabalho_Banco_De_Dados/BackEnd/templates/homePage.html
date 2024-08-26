@@ -31,13 +31,12 @@
                 <div class="logoMilhao">
                     <img src="../static/Img/logoShowDoMilhao.png" alt="">
                 </div>
-                <p class= pergunta>Qual é o nome do processo pelo qual as plantas convertem a luz solar em energia?</p>
+                <p class= pergunta>{{pergunta[1]}}</p>
                 
                 <div class="cardMainRespostas">
-                    <div class="opcResposta"><a href="#"><span class="num_resposta">1</span>Resposta1</a></div>
-                    <div class="opcResposta"><a href="#"><span class="num_resposta">2</span>Resposta2</a></div>
-                    <div class="opcResposta"><a href="#"><span class="num_resposta">3</span>Resposta3</a></div>
-                    <div class="opcResposta"><a href="#"><span class="num_resposta">4</span>Resposta4</a></div>
+                    {% for alternativa in alternativas %}
+                    <div class="opcResposta"><a href="#"><span class="num_resposta">{{alternativa.numero}}</span>{{ alternativa.texto }}</a></div>
+                    {% endfor %}
                 </div>
 
                 <div class="cardDeGanhosEPerdas">

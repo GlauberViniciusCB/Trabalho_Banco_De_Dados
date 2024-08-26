@@ -53,3 +53,27 @@ conn.commit()
 
 # Fechar a conexão
 conn.close()
+
+#Realizamos a operação novamente para inserção dos dados na tabela jogador
+
+# Criar um cursor para executar as queries
+cursor = conn.cursor()
+
+# Nome do arquivo CSV e tabela
+arquivo_csv = 'C:/Users/AmandaeLuiz04/Downloads/Trabalho_Banco_De_Dados/Trabalho_Banco_De_Dados/BackEnd/jogador.csv'
+tabela = 'jogador'  # inserção de dados da tabela pergunta
+
+# Abrir o arquivo CSV
+with open(arquivo_csv, 'r', encoding='utf-8') as csvfile:
+    csvreader = csv.reader(csvfile)
+    next(csvreader)  # Ignorar o cabeçalho
+
+    for row in csvreader:
+        sql = f"INSERT INTO {tabela} (nome, email, senha) VALUES (%s, %s, %s)"
+        cursor.execute(sql, row)
+
+# Confirmar as alterações
+conn.commit()
+
+# Fechar a conexão
+conn.close()
