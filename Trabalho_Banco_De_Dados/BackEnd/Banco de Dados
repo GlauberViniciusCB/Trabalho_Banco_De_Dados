@@ -40,5 +40,6 @@ idpartida INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
 PRIMARY KEY (idpartida),
 idjogador INTEGER NOT NULL,
 pontuacaoparcial INTEGER,
+rodada INTEGER NOT NULL,
 FOREIGN KEY (idjogador)
 REFERENCES jogador(idjogador));

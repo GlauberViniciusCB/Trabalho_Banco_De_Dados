@@ -36,15 +36,19 @@ def root():
         email = request.form['email']
         senha = request.form['senha']
 
+        print(email)
+        print(senha)
+
         # Consultar o banco de dados
         mycursor = conn.cursor()
         sql = "SELECT * FROM jogador WHERE email = %s"
         val = (email,)
         mycursor.execute(sql, val)
         jogador = mycursor.fetchone()
+        print(jogador)
 
-        if jogador and jogador[3] == senha:
-            return redirect(url_for('menu'))
+        if jogador[3] == senha:
+            return redirect(url_for('menu', email=email))
         else:
             return render_template('index.html', error='Usuário ou senha inválidos.')
     else:
@@ -54,6 +58,10 @@ def root():
 @app.route('/cadastro', methods=['GET'])
 def cadastrar():
     return render_template('cadastro.html')
+
+@app.route('/menu', methods=['GET', 'POST'])
+def menu(email):
+    return render_template('menu.html', email=email)
 
 @app.route('/salvar', methods=['POST'])
 def salvar():
@@ -70,16 +78,41 @@ def salvar():
 
     return render_template('index.html')
 
+@app.route('/iniciar_partida', methods=['POST'])
+def iniciar_partida():
+    email = request.form['email']
+
+    # Inserir uma nova partida no banco de dados, associando ao email
+    cursor = conn.cursor()
+    sql = "SELECT idjogador FROM jogador WHERE email = %s"
+    cursor.execute(sql, (email,))
+    idjogador = cursor.fetchone()
+
+    if idjogador:  # Verifique se o jogador foi encontrado
+        sqlpartida = "INSERT INTO partida (idjogador, rodada) VALUES (%s, 0)"
+        cursor.execute(sqlpartida, (idjogador[0],))
+        conn.commit()
+
+        # Obter o ID da partida recém-inserida
+        cursor.execute("SELECT LAST_INSERT_ID()")
+        id_partida = cursor.fetchone()[0]
+
+        # Redirecionar para a homePage com o ID da partida
+        return redirect(url_for('buscar_pergunta', id_partida=id_partida))
+    else:
+        # Tratar o caso em que o jogador não foi encontrado
+        return "Jogador não encontrado"
+
 # Função para buscar uma pergunta aleatória no banco de dados, dentre as 100 perguntas cadastradas
-@app.route('/homePage', methods=['GET', 'POST'])
-def buscar_pergunta():
+@app.route('/homePage/<int:id_partida>', methods=['GET'])
+def buscar_pergunta(id_partida):
     mycursor = conn.cursor()
     mycursor.execute("SELECT * FROM pergunta ORDER BY RAND() LIMIT 1")
     perguntaatual = mycursor.fetchone()
     idpergunta = perguntaatual[0]
-
+    
 #Seleção das alternativas relacionadas ao idpergunta da pergunta atual
-    sql = (f"SELECT conteudo FROM alternativa WHERE idpergunta = {idpergunta}")
+    sql = (f"SELECT conteudo, alternativacorreta FROM alternativa WHERE idpergunta = {idpergunta}")
     val = (idpergunta)
     mycursor.execute(sql)
     alternativas = mycursor.fetchall() #busca todas as alternativas relacionadas ao idpergunta
@@ -89,10 +122,10 @@ def buscar_pergunta():
     aux = 1     
     lista_alternativas = []
     for alt in alternativas:
-        dict_alternativas = {"numero": aux, "texto": alt[0]}
+        dict_alternativas = {"numero": aux, "texto": alt[0], "alternativacorreta": alt[1]}
         lista_alternativas.append(dict_alternativas)         
         
-        aux = aux +1
+        aux = aux +1  
     
     #Prints para testar antes de enviar para o front end
     """print (idpergunta)
@@ -100,25 +133,18 @@ def buscar_pergunta():
     print (alternativas)"""
 
     # Envia os dados para o template
-    return render_template('homePage.html', pergunta=perguntaatual, alternativas=lista_alternativas)
+    return render_template('homePage.html', id_partida=id_partida, pergunta=perguntaatual, alternativas=lista_alternativas)
 
-"""@app.route('/', methods=['GET', 'POST'])
-def quiz():
-    if request.method == 'POST':
-        resposta_usuario = request.form['resposta'] == 'True'  # Convertendo a resposta para booleano
-        pergunta_atual = session.get('pergunta_atual')
-        if resposta_usuario == pergunta_atual[5]:
-            return "Resposta correta!"
-        else:
-            return "Resposta incorreta!"
+#Esta função recebe a resposta que o usuário clicou e verifica se está correta
+@app.route('/verificar_resposta', methods=['POST'])
+def verificar_resposta():
+    resposta_usuario = request.form['alternativa']
+    print(resposta_usuario)
+    # Verificar se a resposta está correta e realizar outras ações
+    """if resposta_usuario == resposta_correta:
+        return "Resposta correta!"
     else:
-        pergunta = buscar_pergunta()
-        session['pergunta_atual'] = pergunta
-        return render_template('quiz.html', pergunta=pergunta)
-
-if __name__ == '__main__':
-    app.secret_key = 'your_secret_key'  # Substitua por uma chave secreta
-    app.run(debug=True)"""
+        return "Resposta incorreta!"""
 
 if __name__ == '__main__':
     app.run()
