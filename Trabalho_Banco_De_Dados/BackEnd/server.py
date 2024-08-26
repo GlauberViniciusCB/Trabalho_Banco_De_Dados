@@ -16,7 +16,7 @@ app = Flask(__name__, static_url_path='/static')
 #   database="Showdomilhao"
 # )
 
-# Conectar ao banco de dados
+# Dados para conectar ao banco de dados
 conn = pymysql.connect(
   host="localhost",
   user="root",
@@ -29,6 +29,7 @@ conn = pymysql.connect(
 df = pd.read_csv('pergunta.csv')
 df.to_sql('pergunta', con=engine, if_exists='append', index=False)"""
 
+#Método para realizar login
 @app.route('/', methods=['GET', 'POST'])
 def root():
     if request.method == 'POST':
@@ -49,7 +50,7 @@ def root():
     else:
         return render_template('index.html')
 
-
+#Método para um jogador se cadastrar
 @app.route('/cadastro', methods=['GET'])
 def cadastrar():
     return render_template('cadastro.html')
@@ -69,7 +70,7 @@ def salvar():
 
     return render_template('index.html')
 
-# Função para buscar uma pergunta aleatória
+# Função para buscar uma pergunta aleatória no banco de dados, dentre as 100 perguntas cadastradas
 @app.route('/homePage', methods=['GET', 'POST'])
 def buscar_pergunta():
     mycursor = conn.cursor()
@@ -77,12 +78,15 @@ def buscar_pergunta():
     perguntaatual = mycursor.fetchone()
     idpergunta = perguntaatual[0]
 
+#Seleção das alternativas relacionadas ao idpergunta da pergunta atual
     sql = (f"SELECT conteudo FROM alternativa WHERE idpergunta = {idpergunta}")
     val = (idpergunta)
     mycursor.execute(sql)
-    alternativas = mycursor.fetchall()
+    alternativas = mycursor.fetchall() #busca todas as alternativas relacionadas ao idpergunta
     
-    aux = 1
+    #Este laço For converte uma lista de tuplas (onde cada tupla representa uma alternativa com um número e um texto) 
+    #em uma lista de dicionários, onde cada dicionário representa uma alternativa para ficar mais fácil de manipular.
+    aux = 1     
     lista_alternativas = []
     for alt in alternativas:
         dict_alternativas = {"numero": aux, "texto": alt[0]}
@@ -90,10 +94,12 @@ def buscar_pergunta():
         
         aux = aux +1
     
-    print (idpergunta)
+    #Prints para testar antes de enviar para o front end
+    """print (idpergunta)
     print (perguntaatual)
-    print (alternativas)
-    # Passando os dados para o template
+    print (alternativas)"""
+
+    # Envia os dados para o template
     return render_template('homePage.html', pergunta=perguntaatual, alternativas=lista_alternativas)
 
 """@app.route('/', methods=['GET', 'POST'])
