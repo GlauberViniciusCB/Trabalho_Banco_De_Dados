@@ -59,7 +59,7 @@ def root():
 def cadastrar():
     return render_template('cadastro.html')
 
-@app.route('/menu', methods=['GET', 'POST'])
+@app.route('/menu/<string:email>', methods=['GET', 'POST'])
 def menu(email):
     return render_template('menu.html', email=email)
 

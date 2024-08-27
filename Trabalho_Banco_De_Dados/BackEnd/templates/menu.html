@@ -8,19 +8,18 @@
 </head>
 <body>
     <div id="containerMenu">
-        
+
         <div class="card">
-        
+
             <div class="cardTop">
                 <div class="logoMilhao"><img src="../static/Img/logoShowDoMilhao.png" alt=""></div>
                 <h2 class="titulo">Faça sua Escolha</h2>
-            </div>
-        
+            </div>/
+
             <div class="cardEscolha">
                 <form method="POST" action="/iniciar_partida">
                     <input type="hidden" name="email" value="{{ email }}">
-                    <button type="submit">Jogar</button>
-                </form>
+                    <button type="submit" class="Verde">Jogar</button>  </form>
                 <div id="escolhas"><a href="/estatisticas"><button class="Amarelo">Estatísticas</button></a> <a href="/"><button class="Vermelho">Sair</button></a></div>
             </div>
 
