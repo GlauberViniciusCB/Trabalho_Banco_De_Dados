@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <form class="formLogin" action="">
+    <form class="formLogin" action="/cadastro" method="POST">
         <div class="card">
 
             <div class="cardTop">
@@ -20,7 +20,7 @@
 
             <div class="cardGrupoDeCampos">
                 <label for="nome">Nome</label>
-                <input class="requerido" type="text" name="senha" placeholder="Digite seu nome" required>
+                <input class="requerido" type="text" name="nome" placeholder="Digite seu nome" required>
                 <span class="span-required">Nome deve ter no mínimo 3 caracteres</span>
             </div>
 
@@ -38,8 +38,11 @@
 
             <div class="cardGrupoDeCampos">
                 <label for="confirmasenha">Confirme a senha</label>
-                <input  class="requerido" type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+                <input  class="requerido" type="password" id="confirmasenha" name="confirmasenha" placeholder="Digite sua senha" required>
                 <span class="span-required">Senhas devem ser compatíveis</span>
+                {% if erro %}
+                    <p class="error-message">{{ erro }}</p>
+                {% endif %}
             </div>
 
             <div class="cardGrupoDeCampos btn">

@@ -50,35 +50,40 @@ def root():
     else:
         return render_template('index.html')
 
-#Método para um jogador se cadastrar
-@app.route('/cadastro', methods=['GET'])
-def cadastrar():
-    return render_template('cadastro.html')
+#Metodo para entrar no menu do jogo
 
 @app.route('/menu/<string:email>', methods=['GET', 'POST'])
 def menu(email):
     return render_template('menu.html', email=email)
 
-@app.route('/salvar', methods=['POST'])
-def salvar():
-    nome = request.form['nome']
-    email = request.form['email']
-    senha = request.form['senha']
+#Método para um jogador se cadastrar
 
-    # Inserir dados no banco de dados
-    mycursor = conn.cursor()
-    sql = "INSERT INTO jogador (nome, email, senha) VALUES (%s, %s, %s)"
-    val = (nome, email, senha)
-    mycursor.execute(sql, val)
-    conn.commit()
 
-    print("Cadastro realizado com sucesso")
-    return render_template('index.html')
+@app.route('/cadastro', methods=['POST','GET'])
+def cadastro():
+    if request.method == 'POST':
+        nome = request.form['nome']
+        email = request.form['email']
+        senha = request.form['senha']
+        confirmasenha = request.form['confirmasenha']
+        print(request.form)
 
-@app.route('/iniciar_partida', methods=['POST'])
-def iniciar_partida():
-    email = request.form['email']
+        if senha == confirmasenha:
+            # Inserir dados no banco de dados
+            mycursor = conn.cursor()
+            sql = "INSERT INTO jogador (nome, email, senha) VALUES (%s, %s, %s)"
+            val = (nome, email, senha)
+            mycursor.execute(sql, val)
+            conn.commit()
 
+            return render_template('index.html', sucesso=True)
+        else:
+            return render_template('cadastro.html', erro='As senhas não coincidem.')
+    else:
+        return render_template('cadastro.html')
+
+@app.route('/iniciar_partida/<string:email>', methods=['GET'])
+def iniciar_partida(email):
     # Inserir uma nova partida no banco de dados, associando ao email
     cursor = conn.cursor()
     sql = "SELECT idjogador FROM jogador WHERE email = %s"
@@ -144,5 +149,5 @@ def verificar_resposta():
         return "Resposta incorreta!"""
 
 if __name__ == '__main__':
-    app.run()
-    buscar_pergunta()
+    #Debug = true para ver os erros mais detalhados
+    app.run(debug=True)
