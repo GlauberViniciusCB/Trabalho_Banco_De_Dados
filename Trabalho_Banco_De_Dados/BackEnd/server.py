@@ -25,10 +25,6 @@ conn = pymysql.connect(
   charset="utf8mb4"
 )
 
-"""engine = create_engine('mysql://root:Minas@0202@host/showdomilhao')
-df = pd.read_csv('pergunta.csv')
-df.to_sql('pergunta', con=engine, if_exists='append', index=False)"""
-
 #Método para realizar login
 @app.route('/', methods=['GET', 'POST'])
 def root():
@@ -76,6 +72,7 @@ def salvar():
     mycursor.execute(sql, val)
     conn.commit()
 
+    print("Cadastro realizado com sucesso")
     return render_template('index.html')
 
 @app.route('/iniciar_partida', methods=['POST'])
