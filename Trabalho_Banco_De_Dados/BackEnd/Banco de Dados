@@ -1,11 +1,3 @@
--- Dados de acesso ao BD
-
-hostname=127.0.0.1,
-port=3306
-user="root",
-password="Minas@0202",
-database="Showdomilhao"
-
 -- Script de Criação do Banco
 
 create database showdomilhao
@@ -13,7 +5,13 @@ default character set utf8;
 use showdomilhao;
 
 -- Script de Criação das Tabelas
-[
+
+-- drop database showdomilhao;
+-- SELECT * FROM jogador;
+-- SELECT * FROM partida;
+-- SELECT * FROM pergunta;
+-- SELECT * FROM alternativa;
+
  create table pergunta(
 idpergunta INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
 enunciado VARCHAR(255) not null,
@@ -43,3 +41,17 @@ pontuacaoparcial INTEGER,
 rodada INTEGER NOT NULL,
 FOREIGN KEY (idjogador)
 REFERENCES jogador(idjogador));
+
+-- CREATE USER 'wsl_user'@'172.19.77.247' IDENTIFIED BY '12345';
+
+-- GRANT ALL PRIVILEGES ON showdomilhao.* TO 'wsl_user'@'172.19.77.247';
+
+
+
+
+
+
+
+
+
+

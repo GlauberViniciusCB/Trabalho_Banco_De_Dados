@@ -91,7 +91,7 @@ def iniciar_partida(email):
     idjogador = cursor.fetchone()
 
     if idjogador:  # Verifique se o jogador foi encontrado
-        sqlpartida = "INSERT INTO partida (idjogador, rodada) VALUES (%s, 0)"
+        sqlpartida = "INSERT INTO partida (idjogador, pontuacaoparcial, rodada) VALUES (%s, 0, 1)"
         cursor.execute(sqlpartida, (idjogador[0],))
         conn.commit()
 
@@ -106,33 +106,33 @@ def iniciar_partida(email):
         return "Jogador não encontrado"
 
 # Função para buscar uma pergunta aleatória no banco de dados, dentre as 100 perguntas cadastradas
-@app.route('/homePage/<int:id_partida>', methods=['GET'])
+@app.route('/homePage/<int:id_partida>', methods=['GET', 'POST'])
 def buscar_pergunta(id_partida):
     mycursor = conn.cursor()
     mycursor.execute("SELECT * FROM pergunta ORDER BY RAND() LIMIT 1")
     perguntaatual = mycursor.fetchone()
     idpergunta = perguntaatual[0]
     
-#Seleção das alternativas relacionadas ao idpergunta da pergunta atual
-    sql = (f"SELECT conteudo, alternativacorreta FROM alternativa WHERE idpergunta = {idpergunta}")
+#Seleção no BD das alternativas relacionadas ao idpergunta da pergunta atual
+    sql = (f"SELECT idalternativa, conteudo, alternativacorreta FROM alternativa WHERE idpergunta = {idpergunta}")
     val = (idpergunta)
     mycursor.execute(sql)
     alternativas = mycursor.fetchall() #busca todas as alternativas relacionadas ao idpergunta
     
-    #Este laço For converte uma lista de tuplas (onde cada tupla representa uma alternativa com um número e um texto) 
-    #em uma lista de dicionários, onde cada dicionário representa uma alternativa para ficar mais fácil de manipular.
+    #Este laço For converte uma lista de tuplas (onde cada tupla representa uma alternativa que está salva no BD, com um número 
+    # e um texto) em uma lista de dicionários, onde cada dicionário representa uma alternativa para ficar mais fácil de manipular.
     aux = 1     
     lista_alternativas = []
     for alt in alternativas:
-        dict_alternativas = {"numero": aux, "texto": alt[0], "alternativacorreta": alt[1]}
+        dict_alternativas = {"numero": aux, "texto": alt[1], "alternativacorreta": alt[2]}
         lista_alternativas.append(dict_alternativas)         
         
         aux = aux +1  
     
     #Prints para testar antes de enviar para o front end
-    """print (idpergunta)
+    print (idpergunta)
     print (perguntaatual)
-    print (alternativas)"""
+    print (alternativas)
 
     # Envia os dados para o template
     return render_template('homePage.html', id_partida=id_partida, pergunta=perguntaatual, alternativas=lista_alternativas)
@@ -140,13 +140,35 @@ def buscar_pergunta(id_partida):
 #Esta função recebe a resposta que o usuário clicou e verifica se está correta
 @app.route('/verificar_resposta', methods=['POST'])
 def verificar_resposta():
-    resposta_usuario = request.form['alternativa']
+    resposta_usuario = request.form['idalternativa']
+    id_pergunta = request.form['idpergunta']  # Recebe o ID da pergunta
     print(resposta_usuario)
     # Verificar se a resposta está correta e realizar outras ações
-    """if resposta_usuario == resposta_correta:
+    mycursor = conn.cursor()
+    sql = "SELECT alternativacorreta FROM alternativa WHERE idpergunta = %s AND idalternativa = %s"
+    val = (id_pergunta, resposta_usuario)
+    mycursor.execute(sql, val)
+    resultado = mycursor.fetchone()
+
+    if resultado and resultado[0] == 1:
+
+        # Obter o número da rodada recém-jogada
+        cursor.execute("SELECT LAST_INSERT_ID()")
+        rodada = cursor.fetchone()[1]
+
+        # Redirecionar para a próxima pergunta incrementando a rodada em que o jogador está
+        return redirect(url_for('buscar_pergunta', rodada=rodada+1))
+
+        #Retorno se a resposta está correta ou não
         return "Resposta correta!"
     else:
-        return "Resposta incorreta!"""
+        return "Resposta incorreta!"
+    
+
+#Metodo para troca de senhas (esqueci a senha)
+"""@app.route('/esqueci_senha', methods=['GET', 'POST'])
+def trocar_senha():"""
+
 
 if __name__ == '__main__':
     #Debug = true para ver os erros mais detalhados

@@ -7,30 +7,7 @@ conn = pymysql.connect(
   charset="utf8mb4"
 )
 
-# Criar um cursor para executar as queries
-cursor = conn.cursor()
-
-# Nome do arquivo CSV e tabela
-arquivo_csv = 'C:/Users/AmandaeLuiz04/Downloads/Trabalho_Banco_De_Dados/Trabalho_Banco_De_Dados/BackEnd/alternativa.csv'
-tabela = 'alternativa'  # Registros da tabela alternativa
-
-# Abrir o arquivo CSV
-with open(arquivo_csv, 'r', encoding='utf-8') as csvfile:
-    csvreader = csv.reader(csvfile)
-    next(csvreader)  # Ignorar o cabeçalho
-
-    for row in csvreader:
-        idpergunta, conteudo, alternativacorreta = row
-        sql = f"INSERT INTO {tabela} (idpergunta, conteudo, alternativacorreta) VALUES (%s, %s, %s)"
-        cursor.execute(sql, (idpergunta, conteudo, alternativacorreta))
-
-# Confirmar as alterações
-conn.commit()
-
-# Fechar a conexão
-conn.close()
-
-#Realizamos a operação novamente para inserção dos dados na tabela pergunta
+#Realizamos a operação para inserção dos registros na tabela pergunta
 
 # Criar um cursor para executar as queries
 cursor = conn.cursor()
@@ -54,7 +31,32 @@ conn.commit()
 # Fechar a conexão
 conn.close()
 
-#Realizamos a operação novamente para inserção dos dados na tabela jogador
+# Criar um cursor para executar as queries
+cursor = conn.cursor()
+
+#Realizamos a operação novamente para inserção dos registros na tabela alternativa
+
+# Nome do arquivo CSV e tabela
+arquivo_csv = 'C:/Users/AmandaeLuiz04/Downloads/Trabalho_Banco_De_Dados/Trabalho_Banco_De_Dados/BackEnd/alternativa.csv'
+tabela = 'alternativa'  # Registros da tabela alternativa
+
+# Abrir o arquivo CSV
+with open(arquivo_csv, 'r', encoding='utf-8') as csvfile:
+    csvreader = csv.reader(csvfile)
+    next(csvreader)  # Ignorar o cabeçalho
+
+    for row in csvreader:
+        idpergunta, conteudo, alternativacorreta = row
+        sql = f"INSERT INTO {tabela} (idpergunta, conteudo, alternativacorreta) VALUES (%s, %s, %s)"
+        cursor.execute(sql, (idpergunta, conteudo, alternativacorreta))
+
+# Confirmar as alterações
+conn.commit()
+
+# Fechar a conexão
+conn.close()
+
+#Realizamos a operação novamente para inserção dos registros na tabela jogador
 
 # Criar um cursor para executar as queries
 cursor = conn.cursor()
