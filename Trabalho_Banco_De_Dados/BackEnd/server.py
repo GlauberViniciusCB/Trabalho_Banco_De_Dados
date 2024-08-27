@@ -154,10 +154,18 @@ def verificar_resposta():
 
         # Obter o número da rodada recém-jogada
         cursor.execute("SELECT LAST_INSERT_ID()")
-        rodada = cursor.fetchone()[1]
+        rodada = cursor.fetchone()[2]
 
         # Redirecionar para a próxima pergunta incrementando a rodada em que o jogador está
         return redirect(url_for('buscar_pergunta', rodada=rodada+1))
+    
+    
+    # Obter a última pontuação
+        cursor.execute("SELECT LAST_INSERT_ID()")
+        pontuacao = cursor.fetchone()[1]
+
+        # Redirecionar para a próxima pergunta incrementando a rodada em que o jogador está
+        return redirect(url_for('buscar_pergunta', pontuacao=pontuacao+100000))
 
         #Retorno se a resposta está correta ou não
         return "Resposta correta!"
