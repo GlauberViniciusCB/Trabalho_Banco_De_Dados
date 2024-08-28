@@ -1,3 +1,7 @@
+import mysql
+import csv
+import pymysql
+
 # Conectar ao banco de dados
 conn = pymysql.connect(
   host="localhost",
@@ -7,6 +11,7 @@ conn = pymysql.connect(
   charset="utf8mb4"
 )
 
+#Para as operações abaixo só é possível realizar a inserção de registros em uma tabela por vez
 #Realizamos a operação para inserção dos registros na tabela pergunta
 
 # Criar um cursor para executar as queries
@@ -31,10 +36,11 @@ conn.commit()
 # Fechar a conexão
 conn.close()
 
-# Criar um cursor para executar as queries
-cursor = conn.cursor()
 
 #Realizamos a operação novamente para inserção dos registros na tabela alternativa
+
+# Criar um cursor para executar as queries
+cursor = conn.cursor()
 
 # Nome do arquivo CSV e tabela
 arquivo_csv = 'C:/Users/AmandaeLuiz04/Downloads/Trabalho_Banco_De_Dados/Trabalho_Banco_De_Dados/BackEnd/alternativa.csv'
@@ -63,7 +69,7 @@ cursor = conn.cursor()
 
 # Nome do arquivo CSV e tabela
 arquivo_csv = 'C:/Users/AmandaeLuiz04/Downloads/Trabalho_Banco_De_Dados/Trabalho_Banco_De_Dados/BackEnd/jogador.csv'
-tabela = 'jogador'  # inserção de dados da tabela pergunta
+tabela = 'jogador'  # inserção de dados da tabela jogador
 
 # Abrir o arquivo CSV
 with open(arquivo_csv, 'r', encoding='utf-8') as csvfile:

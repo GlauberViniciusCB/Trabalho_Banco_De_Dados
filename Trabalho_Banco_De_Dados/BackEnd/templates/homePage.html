@@ -34,9 +34,15 @@
                 <p class= pergunta>{{pergunta[1]}}</p>
                 
                 <div class="cardMainRespostas">
+                    <form action="/homePage/{{ id_partida }}" method="POST">
                     {% for alternativa in alternativas %}
-                    <div class="opcResposta"><a href="#"><span class="num_resposta">{{alternativa.numero}}</span>{{ alternativa.texto }}</a></div>
+                    <div class="opcResposta">
+                        <button type="submit" name="resposta" value="{{ alternativa.id }}">
+                            <span class="num_resposta">{{alternativa.numero}}</span>{{ alternativa.texto }}
+                        </button>
+                    </div>
                     {% endfor %}
+                    </form>
                 </div>
 
                 <div class="cardDeGanhosEPerdas">

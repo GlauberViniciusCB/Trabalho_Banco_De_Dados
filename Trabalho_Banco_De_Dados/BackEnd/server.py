@@ -124,11 +124,22 @@ def buscar_pergunta(id_partida):
     aux = 1     
     lista_alternativas = []
     for alt in alternativas:
-        dict_alternativas = {"numero": aux, "texto": alt[1], "alternativacorreta": alt[2]}
+        dict_alternativas = {"numero": aux, "texto": alt[1], "alternativacorreta": alt[2], "id": alt[0]}
         lista_alternativas.append(dict_alternativas)         
-        
         aux = aux +1  
     
+    if request.method=="POST":
+        resposta_usuario = request.form['resposta']
+        sql = "SELECT alternativacorreta FROM alternativa WHERE idalternativa = %s"
+        val = (resposta_usuario)
+        mycursor.execute(sql, val)
+        resultado = mycursor.fetchone()
+        print(resultado)
+        if resultado[0] == 1:
+            print("Resposta correta")
+        else: 
+            print("Resposta errada.")
+
     #Prints para testar antes de enviar para o front end
     print (idpergunta)
     print (perguntaatual)
@@ -136,42 +147,6 @@ def buscar_pergunta(id_partida):
 
     # Envia os dados para o template
     return render_template('homePage.html', id_partida=id_partida, pergunta=perguntaatual, alternativas=lista_alternativas)
-
-#Esta função recebe a resposta que o usuário clicou e verifica se está correta
-@app.route('/verificar_resposta', methods=['POST'])
-def verificar_resposta():
-    resposta_usuario = request.form['idalternativa']
-    id_pergunta = request.form['idpergunta']  # Recebe o ID da pergunta
-    print(resposta_usuario)
-    # Verificar se a resposta está correta e realizar outras ações
-    mycursor = conn.cursor()
-    sql = "SELECT alternativacorreta FROM alternativa WHERE idpergunta = %s AND idalternativa = %s"
-    val = (id_pergunta, resposta_usuario)
-    mycursor.execute(sql, val)
-    resultado = mycursor.fetchone()
-
-    if resultado and resultado[0] == 1:
-
-        # Obter o número da rodada recém-jogada
-        cursor.execute("SELECT LAST_INSERT_ID()")
-        rodada = cursor.fetchone()[2]
-
-        # Redirecionar para a próxima pergunta incrementando a rodada em que o jogador está
-        return redirect(url_for('buscar_pergunta', rodada=rodada+1))
-    
-    
-    # Obter a última pontuação
-        cursor.execute("SELECT LAST_INSERT_ID()")
-        pontuacao = cursor.fetchone()[1]
-
-        # Redirecionar para a próxima pergunta incrementando a rodada em que o jogador está
-        return redirect(url_for('buscar_pergunta', pontuacao=pontuacao+100000))
-
-        #Retorno se a resposta está correta ou não
-        return "Resposta correta!"
-    else:
-        return "Resposta incorreta!"
-    
 
 #Metodo para troca de senhas (esqueci a senha)
 """@app.route('/esqueci_senha', methods=['GET', 'POST'])
