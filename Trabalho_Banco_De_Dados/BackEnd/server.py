@@ -137,6 +137,11 @@ def buscar_pergunta(id_partida):
         print(resultado)
         if resultado[0] == 1:
             print("Resposta correta")
+            mycursor.execute = ("SELECT rodada FROM partida WHERE idpartida = %s", (id_partida,)) 
+            rodada_atual = mycursor.fetchone()[0]
+            rodada_atual += 1
+            mycursor.execute("UPDATE partida SET rodada = %s WHERE idpartida = %s", (rodada_atual, id_partida))
+            conn.commit()
         else: 
             print("Resposta errada.")
 
