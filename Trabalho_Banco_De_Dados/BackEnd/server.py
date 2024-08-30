@@ -137,13 +137,14 @@ def buscar_pergunta(id_partida):
         print(resultado)
         if resultado[0] == 1:
             print("Resposta correta")
-            mycursor.execute = ("SELECT rodada FROM partida WHERE idpartida = %s", (id_partida,)) 
-            rodada_atual = mycursor.fetchone()[0]
-            rodada_atual += 1
-            mycursor.execute("UPDATE partida SET rodada = %s WHERE idpartida = %s", (rodada_atual, id_partida))
+            sqlpontuacao = "UPDATE partida SET pontuacaoparcial = pontuacaoparcial + 100000 WHERE idpartida = %s"           
+            mycursor.execute(sqlpontuacao, (id_partida,))
+            conn.commit()
+            sqlrodada = "UPDATE partida SET rodada = rodada + 1 WHERE idpartida = %s"
+            mycursor.execute(sqlrodada, (id_partida,))
             conn.commit()
         else: 
-            print("Resposta errada.")
+            print("Resposta errada.")            
 
     #Prints para testar antes de enviar para o front end
     print (idpergunta)
