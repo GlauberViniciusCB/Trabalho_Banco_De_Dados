@@ -35,7 +35,7 @@ def root():
         print(email)
         print(senha)
 
-        # Consultar o banco de dados
+        # Consultar no banco de dados se o jogador está cadastrado
         mycursor = conn.cursor()
         sql = "SELECT * FROM jogador WHERE email = %s"
         val = (email,)
@@ -43,6 +43,7 @@ def root():
         jogador = mycursor.fetchone()
         print(jogador)
 
+        #Consultar no banco de dados se a senha está correta
         if jogador[3] == senha:
             return redirect(url_for('menu', email=email))
         else:
@@ -51,14 +52,11 @@ def root():
         return render_template('index.html')
 
 #Metodo para entrar no menu do jogo
-
 @app.route('/menu/<string:email>', methods=['GET', 'POST'])
 def menu(email):
     return render_template('menu.html', email=email)
 
 #Método para um jogador se cadastrar
-
-
 @app.route('/cadastro', methods=['POST','GET'])
 def cadastro():
     if request.method == 'POST':
@@ -82,9 +80,9 @@ def cadastro():
     else:
         return render_template('cadastro.html')
 
+# Inserir uma nova partida no banco de dados, associando ao email
 @app.route('/iniciar_partida/<string:email>', methods=['GET'])
-def iniciar_partida(email):
-    # Inserir uma nova partida no banco de dados, associando ao email
+def iniciar_partida(email):    
     cursor = conn.cursor()
     sql = "SELECT idjogador FROM jogador WHERE email = %s"
     cursor.execute(sql, (email,))
@@ -128,6 +126,7 @@ def buscar_pergunta(id_partida):
         lista_alternativas.append(dict_alternativas)         
         aux = aux +1  
     
+    #Esta estrutura condicional verifica se a resposta está correta
     if request.method=="POST":
         resposta_usuario = request.form['resposta']
         sql = "SELECT alternativacorreta FROM alternativa WHERE idalternativa = %s"
@@ -137,6 +136,8 @@ def buscar_pergunta(id_partida):
         print(resultado)
         if resultado[0] == 1:
             print("Resposta correta")
+            
+            #Os comandos abaixo atualizam a rodada e a pontuação atual do jogador
             sqlpontuacao = "UPDATE partida SET pontuacaoparcial = pontuacaoparcial + 100000 WHERE idpartida = %s"           
             mycursor.execute(sqlpontuacao, (id_partida,))
             conn.commit()
