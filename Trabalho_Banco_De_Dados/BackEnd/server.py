@@ -88,8 +88,8 @@ def iniciar_partida(email):
     cursor.execute(sql, (email,))
     idjogador = cursor.fetchone()
 
-    if idjogador:  # Verifique se o jogador foi encontrado
-        sqlpartida = "INSERT INTO partida (idjogador, pontuacaoparcial, rodada) VALUES (%s, 0, 1)"
+    if idjogador:  # Verificar se o jogador foi encontrado e iniciar a partida
+        sqlpartida = "INSERT INTO partida (idjogador, pontuacaoparcial, rodada) VALUES (%s, 0, 0)"
         cursor.execute(sqlpartida, (idjogador[0],))
         conn.commit()
 
@@ -103,10 +103,21 @@ def iniciar_partida(email):
         # Tratar o caso em que o jogador não foi encontrado
         return "Jogador não encontrado"
 
-# Função para buscar uma pergunta aleatória no banco de dados, dentre as 100 perguntas cadastradas
+#Função que começa o jogo
 @app.route('/homePage/<int:id_partida>', methods=['GET', 'POST'])
 def buscar_pergunta(id_partida):
     mycursor = conn.cursor()
+
+    # Verificar se a partida já atingiu o número máximo de rodadas
+    sql = "SELECT rodada FROM partida WHERE idpartida = %s"
+    mycursor.execute(sql, (id_partida,))
+    resultado = mycursor.fetchone()
+    rodada_atual = resultado[0] if resultado else 0
+    if rodada_atual == 11:
+        print("Você se tornou um milionário")
+        #return render template('milionario.html')
+
+ # Buscar uma pergunta aleatória no banco de dados, dentre as 100 perguntas cadastradas   
     mycursor.execute("SELECT * FROM pergunta ORDER BY RAND() LIMIT 1")
     perguntaatual = mycursor.fetchone()
     idpergunta = perguntaatual[0]
