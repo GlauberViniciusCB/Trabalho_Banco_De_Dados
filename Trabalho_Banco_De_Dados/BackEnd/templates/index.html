@@ -29,6 +29,17 @@
 
             <div class="cardGrupoDeCampos">
                 <a id="lembrar" href="#">Esqueci a senha</a>
+                <form method="POST" action="/">
+                    <div class="cardGrupoDeCampos">
+                        <button type="button" onclick="redirecionarParaTrocaSenha()">Esqueci a senha</button>
+                    </div>
+            
+                    </form>
+                    <script>
+                        function redirecionarParaTrocaSenha() {
+                            window.location.href = "/esqueceusenha"; 
+                        }
+                    </script>
 
             </div>
             

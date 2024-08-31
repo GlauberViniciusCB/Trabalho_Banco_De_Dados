@@ -19,9 +19,15 @@
                 </div>
 
                 <div class="iconeUsuarios">
-                    <div class="balao"><div id="escolhas"><button class="Amarelo">Pular</button> <button class="Vermelho">Parar</button> <button class="Verde">Ajuda</button></div></div>
-                    <p><img src="../static/Img/Silvio-removebg-preview.png" alt="" ><span id="nomeIcone">Usuário</span></p>
-                </div>
+                    <div class="balao">
+                      <div id="escolhas">
+                        <form method="POST"></form>
+                        <button class="Amarelo">Pular</button>
+                        <button class="Vermelho" id="botaoParar">Parar</button>  <button class="Verde">Ajuda</button>                        
+                      </div>
+                    </div>
+                    <p><img src="../static/Img/Silvio-removebg-preview.png" alt=""><span id="nomeIcone">Usuário</span></p>
+                  </div>
 
                 <div class="tempo finalTempo"><div id="cronometro"></div></div>
            
@@ -35,19 +41,19 @@
                 
                 <div class="cardMainRespostas">
                     <form action="/homePage/{{ id_partida }}" method="POST">
-                    {% for alternativa in alternativas %}
-                    <div class="opcResposta">
-                        <button type="submit" name="resposta" value="{{ alternativa.id }}">
-                            <span class="num_resposta">{{alternativa.numero}}</span>{{ alternativa.texto }}
-                        </button>
-                    </div>
-                    {% endfor %}
-                    </form>
+                        {% for alternativa in alternativas %}
+                        <div class="opcResposta">
+                            <button type="submit" name="resposta" value="{{ alternativa.id }}">
+                                <span class="num_resposta">{{alternativa.numero}}</span>{{ alternativa.texto }}
+                            </button>
+                        </div>
+                        {% endfor %}
+                        <button type="submit" name="acao" value="parar" id="botaoParar" style="display: none;">Parar</button> </form>
                 </div>
 
-                <div class="cardDeGanhosEPerdas">
+                <div class="cardDeGanhosEPerdas">   
                 
-                    <div class="cardValor">
+                    <div class="cardValor">                        
                        <p><img  class="iconeValor" src="../static/Img/saco de dinheiro e pilha de moedas de ouro.jfif" alt="">R$ 1 000 000</p> 
                         <span>Errar</span>
                     </div>

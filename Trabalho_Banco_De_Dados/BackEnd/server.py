@@ -107,6 +107,7 @@ def iniciar_partida(email):
 @app.route('/homePage/<int:id_partida>', methods=['GET', 'POST'])
 def buscar_pergunta(id_partida):
     mycursor = conn.cursor()
+    rodada_atual = None 
 
     # Verificar se a partida já atingiu o número máximo de rodadas
     sql = "SELECT rodada FROM partida WHERE idpartida = %s"
@@ -116,6 +117,30 @@ def buscar_pergunta(id_partida):
     if rodada_atual == 11:
         print("Você se tornou um milionário")
         #return render template('milionario.html')
+    
+    #Verificar se o jogador quis parar no marco 5 ou 9
+    
+    if request.method == 'POST':
+        if 'acao' in request.form and request.form['acao'] == 'parar':
+            if rodada_atual in (5, 9):
+                print(f"Parou na rodada {rodada_atual}")
+
+                # Atualizar o banco de dados
+                sql = "UPDATE partida SET rodada = %s WHERE idpartida = %s"
+                mycursor.execute(sql, (rodada_atual, id_partida))
+                conn.commit()
+                #return render_template('fim_de_jogo.html')
+
+        else:
+            #return render_template('erro.html', mensagem="Opção inválida.")
+            print(f"Não parou ainda")
+
+        # Atualizar o banco de dados
+        sql = "UPDATE partida SET rodada = %s WHERE idpartida = %s"
+        mycursor.execute(sql, (rodada_atual, id_partida))
+        conn.commit()
+        print("Fim de jogo")
+        #return render_template('fim_de_jogo.html')
 
  # Buscar uma pergunta aleatória no banco de dados, dentre as 100 perguntas cadastradas   
     mycursor.execute("SELECT * FROM pergunta ORDER BY RAND() LIMIT 1")
@@ -156,7 +181,8 @@ def buscar_pergunta(id_partida):
             mycursor.execute(sqlrodada, (id_partida,))
             conn.commit()
         else: 
-            print("Resposta errada.")            
+            print("Resposta errada.")   
+            #return render template('perdeu.html')         
 
     #Prints para testar antes de enviar para o front end
     print (idpergunta)
@@ -164,11 +190,35 @@ def buscar_pergunta(id_partida):
     print (alternativas)
 
     # Envia os dados para o template
-    return render_template('homePage.html', id_partida=id_partida, pergunta=perguntaatual, alternativas=lista_alternativas)
+    return render_template('homePage.html', id_partida=id_partida, pergunta=perguntaatual, alternativas=lista_alternativas, rodada_atual=rodada_atual)
 
 #Metodo para troca de senhas (esqueci a senha)
-"""@app.route('/esqueci_senha', methods=['GET', 'POST'])
-def trocar_senha():"""
+@app.route('/esqueceusenha', methods=['GET', 'POST'])
+def trocar_senha():
+    if request.method == 'POST':
+        email = request.form['email']
+        nova_senha = request.form['nova_senha']
+        confirmar_senha = request.form['confirmar_senha']
+        print(email)
+       
+        # Consultar no banco de dados se o email é válido
+        mycursor = conn.cursor()
+        sql = "SELECT * FROM jogador WHERE email = %s"
+        val = (email,)
+        mycursor.execute(sql, val)
+        jogador = mycursor.fetchone()
+
+        #Atualizar a senha no banco de dados
+        if jogador:
+            if nova_senha == confirmar_senha:
+                sql = "UPDATE jogador SET senha = %s WHERE email = %s"
+                val = (confirmar_senha, email)
+                mycursor.execute(sql, val)
+                conn.commit()            
+        else:
+            return render_template('index.html', error='Usuário inválido.')
+    else:
+        return render_template('index.html')
 
 
 if __name__ == '__main__':
