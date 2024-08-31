@@ -6,14 +6,6 @@ import chardet
 
 app = Flask(__name__, static_url_path='/static')
 
-# Configuração do banco de dados via wsl
-# conn = pymysql.connect(
-#   host="172.19.64.1",
-#   user="wsl_user",
-#   password="12345",
-#   database="Showdomilhao"
-# )
-
 # Dados para conectar ao banco de dados
 conn = pymysql.connect(
   host="localhost",

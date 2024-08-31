@@ -11,9 +11,9 @@ conn = pymysql.connect(
   charset="utf8mb4"
 )
 
-#Para as operações abaixo só é possível realizar a inserção de registros em uma tabela por vez
-#Realizamos a operação para inserção dos registros na tabela pergunta
+#Para as operações abaixo só é possível realizar a inserção de registros em uma tabela por vez, devemos comentar as demais partes do código
 
+#Realizamos abaixo a operação para inserção dos registros na tabela pergunta
 # Criar um cursor para executar as queries
 cursor = conn.cursor()
 
@@ -38,7 +38,6 @@ conn.close()
 
 
 #Realizamos a operação novamente para inserção dos registros na tabela alternativa
-
 # Criar um cursor para executar as queries
 cursor = conn.cursor()
 
@@ -63,13 +62,12 @@ conn.commit()
 conn.close()
 
 #Realizamos a operação novamente para inserção dos registros na tabela jogador
-
 # Criar um cursor para executar as queries
 cursor = conn.cursor()
 
 # Nome do arquivo CSV e tabela
 arquivo_csv = 'C:/Users/AmandaeLuiz04/Downloads/Trabalho_Banco_De_Dados/Trabalho_Banco_De_Dados/BackEnd/jogador.csv'
-tabela = 'jogador'  # inserção de dados da tabela jogador
+tabela = 'jogador'  # Registros da tabela jogador
 
 # Abrir o arquivo CSV
 with open(arquivo_csv, 'r', encoding='utf-8') as csvfile:

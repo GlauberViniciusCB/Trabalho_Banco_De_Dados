@@ -6,12 +6,6 @@ use showdomilhao;
 
 -- Script de Criação das Tabelas
 
--- drop database showdomilhao;
--- SELECT * FROM jogador;
--- SELECT * FROM partida;
--- SELECT * FROM pergunta;
--- SELECT * FROM alternativa;
-
  create table pergunta(
 idpergunta INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
 enunciado VARCHAR(255) not null,
@@ -42,9 +36,7 @@ rodada INTEGER NOT NULL,
 FOREIGN KEY (idjogador)
 REFERENCES jogador(idjogador));
 
--- CREATE USER 'wsl_user'@'172.19.77.247' IDENTIFIED BY '12345';
 
--- GRANT ALL PRIVILEGES ON showdomilhao.* TO 'wsl_user'@'172.19.77.247';
 
 
 

@@ -1,0 +1,5 @@
+Realizar o download do Python no link: https://www.python.org/downloads/
+Abrir o Prompt de comando e executar a instalação dos Frameworks:
+
+pip install Flask PyMySQL
+pip install pandas
