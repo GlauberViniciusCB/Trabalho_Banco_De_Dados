@@ -488,3 +488,24 @@ img.iconeValor {
     margin-right: 10px;
 }
 
+.balaoFinal{
+    background-color: #f0f0f0;
+    padding: 100px;
+    margin-right: 2px;
+    position: relative;
+    width: 3000px;
+    border-radius: 5px;
+    box-shadow: 1px 3px 1px #ccc;
+}
+
+.balaoFinal::before {
+    content: '';
+    position: absolute;
+    width: 15px;
+    top: 10px;
+    height: 15px;
+    right: -7px;
+    background-color: #f0f0f0;
+    transform: rotate(45deg);
+}
+
