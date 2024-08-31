@@ -214,7 +214,8 @@ def trocar_senha():
                 sql = "UPDATE jogador SET senha = %s WHERE email = %s"
                 val = (confirmar_senha, email)
                 mycursor.execute(sql, val)
-                conn.commit()            
+                conn.commit()
+                print("Senha alterada com sucesso.")            
         else:
             return render_template('index.html', error='Usuário inválido.')
     else:
