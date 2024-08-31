@@ -125,9 +125,9 @@ def buscar_pergunta(id_partida):
         print("Você se tornou um milionário")
         return render_template('vitoria.html')
     
-    #Verificar se o jogador quis parar no marco 5 ou 9    
+    #Verificar se o jogador quis parar na rodada atual    
     if request.method == 'POST':
-        if rodada_atual in (5, 9):
+        #if rodada_atual in (5, 9):
             if 'acao' in request.form and request.form['acao'] == 'parar':            
                 print(f"Parou na rodada {rodada_atual}")
 
