@@ -169,14 +169,19 @@ def buscar_pergunta(id_partida):
         if resultado[0] == 1:
             print("Resposta correta")
             
-            #Os comandos abaixo atualizam a rodada e a pontuação atual do jogador
+            #Os comandos abaixo atualizam a rodada e a pontuação atual do jogador caso ele acerte
             sqlpontuacao = "UPDATE partida SET pontuacaoparcial = pontuacaoparcial + 100000 WHERE idpartida = %s"           
             mycursor.execute(sqlpontuacao, (id_partida,))
             conn.commit()
             sqlrodada = "UPDATE partida SET rodada = rodada + 1 WHERE idpartida = %s"
             mycursor.execute(sqlrodada, (id_partida,))
             conn.commit()
-        else: 
+
+        #Se errou, a pontuação é zerada e o resultado é gravado   
+        else:
+            sqlpontuacao = "UPDATE partida SET pontuacaoparcial = 0 WHERE idpartida = %s"           
+            mycursor.execute(sqlpontuacao, (id_partida,))
+            conn.commit() 
             print("Resposta errada.")   
             return render_template('derrota.html')         
 
