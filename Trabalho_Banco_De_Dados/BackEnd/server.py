@@ -1,9 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, flash, render_template, request, redirect, url_for, session
 import pymysql
-import sqlalchemy
 import pandas as pd
 import csv
-from sqlalchemy import create_engine
 import chardet
 
 app = Flask(__name__, static_url_path='/static')
@@ -59,15 +57,24 @@ def menu(email):
 #Método para um jogador se cadastrar
 @app.route('/cadastro', methods=['POST','GET'])
 def cadastro():
+    mycursor = conn.cursor()
     if request.method == 'POST':
         nome = request.form['nome']
         email = request.form['email']
         senha = request.form['senha']
         confirmasenha = request.form['confirmasenha']
-        print(request.form)
+        
+         # Verificar se o email já existe
+        mycursor = conn.cursor()
+        sql = "SELECT * FROM jogador WHERE email = %s"
+        val = (email,)
+        mycursor.execute(sql, val)
+        emailexistente = mycursor.fetchone()
 
-        if senha == confirmasenha:
-            # Inserir dados no banco de dados
+        if len(emailexistente) !=0:
+            return render_template('cadastro.html', erro='Email já cadastrado')
+        # Inserir dados no banco de dados
+        if senha == confirmasenha:            
             mycursor = conn.cursor()
             sql = "INSERT INTO jogador (nome, email, senha) VALUES (%s, %s, %s)"
             val = (nome, email, senha)
@@ -107,7 +114,7 @@ def iniciar_partida(email):
 @app.route('/homePage/<int:id_partida>', methods=['GET', 'POST'])
 def buscar_pergunta(id_partida):
     mycursor = conn.cursor()
-    rodada_atual = None 
+    rodada_atual = session.get('rodada_atual', 0) 
 
     # Verificar se a partida já atingiu o número máximo de rodadas, indicando que o jogador ganhou
     sql = "SELECT rodada FROM partida WHERE idpartida = %s"
@@ -118,8 +125,7 @@ def buscar_pergunta(id_partida):
         print("Você se tornou um milionário")
         return render_template('vitoria.html')
     
-    #Verificar se o jogador quis parar no marco 5 ou 9
-    
+    #Verificar se o jogador quis parar no marco 5 ou 9    
     if request.method == 'POST':
         if rodada_atual in (5, 9):
             if 'acao' in request.form and request.form['acao'] == 'parar':            
@@ -130,9 +136,6 @@ def buscar_pergunta(id_partida):
                 mycursor.execute(sql, (rodada_atual, id_partida))
                 conn.commit()
                 return render_template('desistiu.html')
-
-        else:
-            print(f"Não parou ainda")
 
  # Buscar uma pergunta aleatória no banco de dados, dentre as 100 perguntas cadastradas   
     mycursor.execute("SELECT * FROM pergunta ORDER BY RAND() LIMIT 1")
@@ -189,8 +192,8 @@ def buscar_pergunta(id_partida):
 def trocar_senha():
     if request.method == 'POST':
         email = request.form['email']
-        nova_senha = request.form['nova_senha']
-        confirmar_senha = request.form['confirmar_senha']
+        nova_senha = request.form['senhaNova']
+        confirmar_senha = request.form['confirmaNovaSenha']
         print(email)
        
         # Consultar no banco de dados se o email é válido
@@ -207,12 +210,37 @@ def trocar_senha():
                 val = (confirmar_senha, email)
                 mycursor.execute(sql, val)
                 conn.commit()
-                print("Senha alterada com sucesso.")            
+                print("Senha alterada com sucesso.")
+                return redirect(url_for('root'))           
         else:
-            return render_template('index.html', error='Usuário inválido.')
+            return render_template('esqueceusenha.html', error='Usuário inválido.')
     else:
-        return render_template('index.html')
-
+        return render_template('esqueceusenha.html')
+    
+#Funções que mostram as estatísticas do jogador atual
+@app.route('/estatisticas', methods=['GET', 'POST'])
+def buscar_total_partidas():
+    if request.method == 'GET':
+        id_jogador = request.form['idjogador']
+        mycursor = conn.cursor()
+        sql = "SELECT j.nome, COUNT(p.idpartida) AS total_partidas FROM jogador j INNER JOIN partida p ON j.idjogador = p.idjogador WHERE j.idjogador = %s"
+        val = (id)
+        mycursor.execute(sql, (val))
+        qtde = mycursor.fetchone()        
+        print(f"Total de partidas {qtde}")
+        conn.commit()
+    
+@app.route('/estatisticas', methods=['GET', 'POST'])
+def buscar_media_pontuacao():
+    if request.method == 'GET':
+        id_jogador = request.form['idjogador']
+        mycursor = conn.cursor()
+        sql = "SELECT j.nome, ROUND(AVG(p.pontuacaoparcial), 2) AS 'media_pontuacao' FROM jogador j INNER JOIN partida p ON j.idjogador = p.idjogador WHERE j.idjogador = %s"
+        val = (id)
+        mycursor.execute(sql, (val))
+        qtde = mycursor.fetchone()        
+        print(f"Total de partidas {qtde}")
+        conn.commit()
 
 if __name__ == '__main__':
     #Debug = true para ver os erros mais detalhados

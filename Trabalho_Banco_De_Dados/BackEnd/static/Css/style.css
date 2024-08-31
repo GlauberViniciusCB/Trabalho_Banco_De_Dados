@@ -148,13 +148,26 @@ a#lembrar{
 }
 
 
-
 .span-required {
     display: none;
     color: red;
     font-size: 0.8rem;
     padding-left: 2px;
 }
+
+/* Css Menu */
+
+#containerMenu{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#containerMenu > .card h2{
+    margin: 20px;
+}
+
 
 /* Css Da HomePage */
 
@@ -265,7 +278,8 @@ a#lembrar{
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    color: #fff;
+    /* color: #fff; */
+    color: #000;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
@@ -488,36 +502,123 @@ img.iconeValor {
     margin-right: 10px;
 }
 
-.balaoFinal{
+/* Css Tela Pós Jogo  */
+
+.containerPosJogo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.cardPosjogo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    height: 600px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    background-image: linear-gradient(to right, #0427ba, #0f1b84, #111b6f, #0c1b96, #052ccc);
+    background-size: 400% 400%;
+    border-radius: 10px;
+    padding: 30px;
+    animation: gradientAnimation 12s ease infinite;
+}
+
+.tituloContainerPosJogo {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.balaoFinal {
     background-color: #f0f0f0;
-    padding: 100px;
-    margin-right: 2px;
+    padding: 20px;
+    margin-right: 20px;
     position: relative;
-    width: 3000px;
-    border-radius: 5px;
-    box-shadow: 1px 3px 1px #ccc;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    font-size: 1.8rem;
 }
 
 .balaoFinal::before {
     content: '';
     position: absolute;
     width: 15px;
-    top: 10px;
     height: 15px;
-    right: -7px;
     background-color: #f0f0f0;
     transform: rotate(45deg);
+    top: 120px;
+    right: -7.5px;
 }
 
-/* Css Menu */
+.tituloContainerPosJogo img {
+    max-width: 300px;
+    height: auto;
+    border-radius: 10px;
+}
 
-#containerMenu{
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.escolhaPosJogo{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
-#containerMenu > .card h2{
-    margin: 20px;
+.escolhaPosJogo input{
+    padding: 20px;
+    margin: 0px 5px;
+    border-radius: 5px;
+}
+
+.novoJogo{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #2ecc71;
+    outline: 0;
+    border: 0 none ;
+}
+
+.sairJogo{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #c21f04;
+    outline: 0;
+    border: 0 none ;
+    outline: 0;
+    border: 0 none ;
+}
+
+.sairJogo:hover {
+    background-color: #c21f04;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.novoJogo:hover {
+    background-color: #2ecc71;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
 }

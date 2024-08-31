@@ -21,12 +21,12 @@
                 <div class="iconeUsuarios">
                     <div class="balao">
                       <div id="escolhas">
-                        <form method="POST"></form>
-                        <button class="Amarelo">Pular</button>
-                        <button class="Vermelho" id="botaoParar">Parar</button>  <button class="Verde">Ajuda</button>                        
+                        <form method="POST">                            
+                            <button class="Vermelho" id="botaoParar" name="acao" value="parar">Parar</button>
+                        </form>                        
                       </div>
                     </div>
-                    <p><img src="../static/Img/Silvio-removebg-preview.png" alt=""><span id="nomeIcone">Usuário</span></p>
+                    <p><img src="../static/Img/Silvio-removebg-preview.png" alt=""><span id="nomeIcone">Jogador</span></p>
                   </div>
 
                 <div class="tempo finalTempo"><div id="cronometro"></div></div>
@@ -48,7 +48,10 @@
                             </button>
                         </div>
                         {% endfor %}
-                        <button type="submit" name="acao" value="parar" id="botaoParar" style="display: none;">Parar</button> </form>
+                        {% if rodada_atual==5 or rodada_atual==9%}
+                            <button type="submit" name="acao" value="parar" id="botaoParar" style="display: none;">Parar</button> 
+                        {% endif %}    
+                    </form>
                 </div>
 
                 <div class="cardDeGanhosEPerdas">   

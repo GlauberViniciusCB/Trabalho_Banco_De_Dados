@@ -169,12 +169,3 @@ formLogin.addEventListener('submit', function (event) {
             loginError.style.display = 'block';
         });
 });
-
-function atualizarBotaoParar() {
-    const botaoParar = document.getElementById('botaoParar');
-    if (rodadaAtual === 5 || rodadaAtual === 9) {
-      botaoParar.style.display = 'block';
-    } else {
-      botaoParar.style.display = 'none';
-    }
-  }
