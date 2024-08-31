@@ -116,7 +116,7 @@ def buscar_pergunta(id_partida):
     rodada_atual = resultado[0] if resultado else 0
     if rodada_atual == 11:
         print("Você se tornou um milionário")
-        #return render template('milionario.html')
+        return render_template('vitoria.html')
     
     #Verificar se o jogador quis parar no marco 5 ou 9
     
@@ -129,7 +129,7 @@ def buscar_pergunta(id_partida):
                 sql = "UPDATE partida SET rodada = %s WHERE idpartida = %s"
                 mycursor.execute(sql, (rodada_atual, id_partida))
                 conn.commit()
-                #return render_template('fim_de_jogo.html')
+                return render_template('desistiu.html')
 
         else:
             #return render_template('erro.html', mensagem="Opção inválida.")
@@ -139,7 +139,6 @@ def buscar_pergunta(id_partida):
         sql = "UPDATE partida SET rodada = %s WHERE idpartida = %s"
         mycursor.execute(sql, (rodada_atual, id_partida))
         conn.commit()
-        print("Fim de jogo")
         #return render_template('fim_de_jogo.html')
 
  # Buscar uma pergunta aleatória no banco de dados, dentre as 100 perguntas cadastradas   
@@ -182,7 +181,7 @@ def buscar_pergunta(id_partida):
             conn.commit()
         else: 
             print("Resposta errada.")   
-            #return render template('perdeu.html')         
+            return render_template('derrota.html')         
 
     #Prints para testar antes de enviar para o front end
     print (idpergunta)

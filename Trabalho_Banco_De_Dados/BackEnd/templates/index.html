@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <form method="POST" action="/">
+    <form class="formLogin" method="POST" action="/">
         <div class="card">
             <div class="cardTop">
                     <div class="logoMilhao"><img src="../static/Img/logoShowDoMilhao.png" alt=""></div>
@@ -27,18 +27,8 @@
                 <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
             </div>
 
-            <div class="cardGrupoDeCampos">                
-                <form method="POST" action="/">
-                    <div class="cardGrupoDeCampos">
-                        <button type="button" onclick="redirecionarParaTrocaSenha()">Esqueci a senha</button>
-                    </div>
-            
-                    </form>
-                    <script>
-                        function redirecionarParaTrocaSenha() {
-                            window.location.href = "/esqueceusenha"; 
-                        }
-                    </script>
+            <div class="cardGrupoDeCampos">
+                <a id="lembrar" href="#">Esqueci a senha</a>
 
             </div>
             
