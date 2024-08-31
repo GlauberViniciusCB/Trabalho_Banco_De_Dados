@@ -109,20 +109,20 @@ def buscar_pergunta(id_partida):
     mycursor = conn.cursor()
     rodada_atual = None 
 
-    # Verificar se a partida já atingiu o número máximo de rodadas
+    # Verificar se a partida já atingiu o número máximo de rodadas, indicando que o jogador ganhou
     sql = "SELECT rodada FROM partida WHERE idpartida = %s"
     mycursor.execute(sql, (id_partida,))
     resultado = mycursor.fetchone()
     rodada_atual = resultado[0] if resultado else 0
-    if rodada_atual == 11:
+    if rodada_atual == 10:
         print("Você se tornou um milionário")
         return render_template('vitoria.html')
     
     #Verificar se o jogador quis parar no marco 5 ou 9
     
     if request.method == 'POST':
-        if 'acao' in request.form and request.form['acao'] == 'parar':
-            if rodada_atual in (5, 9):
+        if rodada_atual in (5, 9):
+            if 'acao' in request.form and request.form['acao'] == 'parar':            
                 print(f"Parou na rodada {rodada_atual}")
 
                 # Atualizar o banco de dados
@@ -132,14 +132,7 @@ def buscar_pergunta(id_partida):
                 return render_template('desistiu.html')
 
         else:
-            #return render_template('erro.html', mensagem="Opção inválida.")
             print(f"Não parou ainda")
-
-        # Atualizar o banco de dados
-        sql = "UPDATE partida SET rodada = %s WHERE idpartida = %s"
-        mycursor.execute(sql, (rodada_atual, id_partida))
-        conn.commit()
-        #return render_template('fim_de_jogo.html')
 
  # Buscar uma pergunta aleatória no banco de dados, dentre as 100 perguntas cadastradas   
     mycursor.execute("SELECT * FROM pergunta ORDER BY RAND() LIMIT 1")
