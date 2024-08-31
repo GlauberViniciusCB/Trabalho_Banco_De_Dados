@@ -71,8 +71,9 @@ def cadastro():
         mycursor.execute(sql, val)
         emailexistente = mycursor.fetchone()
 
-        if len(emailexistente) !=0:
-            return render_template('cadastro.html', erro='Email já cadastrado')
+        if emailexistente is not None:
+            if len(emailexistente) != 0:
+                return render_template('cadastro.html', erro='Email já cadastrado')
         # Inserir dados no banco de dados
         if senha == confirmasenha:            
             mycursor = conn.cursor()
