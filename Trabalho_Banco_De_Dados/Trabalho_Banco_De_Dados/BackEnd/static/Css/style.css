@@ -617,8 +617,29 @@ img.iconeValor {
     transform: scale(1.05);
 }
 
+.sairJogo:focus {
+    outline: 2px solid #c21f04;
+    outline-offset: 2px;
+}
+
 .novoJogo:hover {
     background-color: #2ecc71;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transform: scale(1.05);
+}
+
+.novoJogo:focus {
+    outline: 2px solid #27ae60;
+    outline-offset: 2px;
+}
+
+/* Css Da Tela de Estatistica */
+
+.containerEstatistco{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+
 }
